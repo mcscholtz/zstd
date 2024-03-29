@@ -1,0 +1,8 @@
+build
+modules
+.vscode
+.west
+.venv
+bootloader
+tools
+zephyr
