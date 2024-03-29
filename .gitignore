@@ -5,4 +5,4 @@ modules
 .venv
 bootloader
 tools
-zephyr
+/zephyr

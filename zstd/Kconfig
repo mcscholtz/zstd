@@ -1,0 +1,11 @@
+menu "Zephyr OS Rust support"
+
+config RUST
+    bool "Enable Rust support"
+    depends on ZEPHYR_BASE
+    select DYNAMIC_THREAD
+    help
+      Enable support for Rust in Zephyr. This will allow you to write
+      Zephyr applications in Rust.
+
+endmenu
