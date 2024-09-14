@@ -29,10 +29,10 @@ ExternalProject_Add(
         # For the build to always be run, so that changes in the Rust
         # code are detected.
         BUILD_ALWAYS TRUE
-        BUILD_COMMAND "cargo" "rustc" "--target" "thumbv7m-none-eabi" "--release" "--" "--emit" "asm"
+        BUILD_COMMAND "cargo" "rustc" "--target" "x86_64-unknown-none" "--release" "--" "--emit" "asm"
         INSTALL_COMMAND ""
         BUILD_BYPRODUCTS
-          ${rust_app_build_dir}/target/thumbv7m-none-eabi/release/libdemo.a
+          ${rust_app_build_dir}/target/x86_64-unknown-none/release/libdemo.a
         # needed to produce colored output
         USES_TERMINAL_BUILD true
 	DEPENDS zephyr_interface
@@ -46,7 +46,7 @@ add_dependencies(
 )
 
 set_target_properties(rust_app_lib PROPERTIES IMPORTED_LOCATION
-  ${rust_app_build_dir}/target/thumbv7m-none-eabi/release/libdemo.a)
+  ${rust_app_build_dir}/target/x86_64-unknown-none/release/libdemo.a)
 
 # Add our application, along with -lgcc
-target_link_libraries(app PUBLIC rust_app_lib gcc)
+target_link_libraries(app PUBLIC rust_app_lib)
