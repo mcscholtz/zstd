@@ -1,12 +1,18 @@
 #include <stdio.h>
+#include "../../zstd/include/logger.h"
 #include "rustlib.h"
+
+LOG_MODULE_REGISTER(demo, 4);
+
+NEW_LOG_INSTANCE(demo, app, 4);
 
 int main(void)
 {
-    printf("calling into rust....%p\n ", rust_test);
+    LOG_INST_INF(app.log, "entering Rust code.....");
+
     int sum = rust_test(1, 2);
 
-    printf("rust_add(1, 2) = %d\n", sum);
+    LOG_INST_INF(app.log, "rust_add(1, 2) = %d", sum);
 
 	return 0;
 }

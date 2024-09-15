@@ -10,6 +10,13 @@ static mut ALLOCATOR: zephyr::alloc::KernelAllocator = zephyr::alloc::KernelAllo
 
 pub mod sync;
 pub mod thread;
+pub mod logger;
+
+pub use logger::logger::{
+    Level,
+    ZephyrLogger,
+    struct_logger_instance
+};
 
 extern "C" {
      fn zstd_impl_printk(fmt: *const u8);
