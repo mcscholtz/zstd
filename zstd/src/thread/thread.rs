@@ -38,6 +38,9 @@ extern "C" {
         delay: zephyr::time::struct_k_timeout_t) -> *mut struct_k_thread;
       fn zstd_impl_k_thread_free(thread: *mut struct_k_thread);
       fn zstd_impl_k_thread_join(thread: *mut struct_k_thread, timeout: zephyr::time::struct_k_timeout_t) -> i32;
+      fn zstd_impl_k_thread_abort();
+      fn zstd_impl_k_thread_yield();
+      fn zstd_impl_k_thread_usleep(us: u32);
 }
 
 extern "C" fn zstd_impl_thread_entry<F, T>(p1: *mut core::ffi::c_void, p2: *mut core::ffi::c_void, _p3: *mut core::ffi::c_void)
@@ -158,5 +161,33 @@ impl<T> JoinHandle<T> {
         let result = unsafe { alloc::boxed::Box::from_raw(self.result as *mut T) };
         
         return Ok(*result);
+    }
+}
+
+#[inline(always)]
+pub fn sleep<T: Into<time::Duration>>(time: T) {
+    let duration: time::Duration = time.into();
+    unsafe {
+        zstd_impl_k_thread_usleep(duration.as_micros() as u32);
+    }
+}
+
+/// Abort the calling thread.
+pub fn abort() {
+    unsafe {
+        zstd_impl_k_thread_abort();
+    }
+}
+
+pub fn msleep(ms: u32) {
+    unsafe {
+        zstd_impl_k_thread_usleep(ms * 1000);
+    }
+}
+
+#[inline(always)]
+pub fn yield_now() {
+    unsafe {
+        zstd_impl_k_thread_yield();
     }
 }

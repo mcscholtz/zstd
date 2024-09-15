@@ -13,7 +13,7 @@ module!(rust, TerminalColor::DarkGreen);
 fn panic(info: &core::panic::PanicInfo) -> ! {
     loop {
         error!("Panic: {:#?}", info);
-        loop {}
+        zstd::thread::sleep(core::time::Duration::from_secs(1));
     }
 }
 

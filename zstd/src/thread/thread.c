@@ -32,3 +32,15 @@ int zstd_impl_k_thread_join(struct k_thread *thread, k_timeout_t timeout) {
     return k_thread_join(thread, timeout);
 }
 
+void zstd_impl_k_thread_abort() {
+	k_thread_abort(k_current_get());
+}
+
+void zstd_impl_k_thread_usleep(uint32_t us)
+{
+	k_usleep(us);
+}
+
+void zstd_impl_k_thread_yield() {
+	k_yield();
+}
