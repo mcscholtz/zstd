@@ -1,5 +1,6 @@
 #![no_std]
 use alloc::sync::Arc;
+use zstd::sync::Channel;
 use zstd::{error, info};
 use zstd::sync::mutex::Mutex;
 use zstd::module;
@@ -13,7 +14,7 @@ module!(rust, TerminalColor::DarkGreen);
 fn panic(info: &core::panic::PanicInfo) -> ! {
     loop {
         error!("Panic: {:#?}", info);
-        zstd::thread::sleep(core::time::Duration::from_secs(1));
+        zstd::thread::sleep(core::time::Duration::from_secs(10));
     }
 }
 
@@ -26,10 +27,20 @@ pub extern "C" fn rust_test(a: i32, b: i32) -> i32 {
     let thread1_mutex = mutex.clone();
     let thread2_mutex = mutex.clone();
 
+    let channel: Channel<u32> = zstd::sync::spsc::Channel::new(4).unwrap();
+    let (tx, rx) = channel.split();
+
     info!("spawining 2 threads from rust");
     // test spawning a thread
     let handle1 = zstd::thread::spawn(move || {
         info!("entered dynamically allocated rust thread #1....");
+        for i in 0..10 {
+            info!("Thread 1 send: {}", i);
+            if let Err(e) = tx.blocking_send(&i) {
+                error!("Failed to send msg: {:#?}", e)
+            }
+            zstd::thread::sleep(core::time::Duration::from_millis(200));
+        }
         let mut lock = thread1_mutex.lock();
         *lock += a;
         a
@@ -38,6 +49,12 @@ pub extern "C" fn rust_test(a: i32, b: i32) -> i32 {
 
     let handle2 = zstd::thread::spawn(move || {
         info!("entered dynamically allocated rust thread #2....");
+        for _ in 0..10 {
+            match rx.blocking_recv() {
+                Ok(value) => info!("Thread 2 recv: {}", value),
+                Err(e) => error!("Failed to send msg: {:#?}", e)
+            }
+        }
         let mut lock = thread2_mutex.lock();
         *lock += b;
         b
@@ -59,6 +76,6 @@ pub extern "C" fn rust_test(a: i32, b: i32) -> i32 {
 
     info!("Mutex value: {}",  *mutex.lock());
 
-    panic!("we are having a panic!");
+    //panic!("we are having a panic!");
     x + y
 }

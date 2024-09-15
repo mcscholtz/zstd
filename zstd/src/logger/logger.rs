@@ -116,9 +116,9 @@ pub trait Module {
 #[macro_export]
 macro_rules! critical {
     ($($arg:tt)*) => {{
-		#[cfg(test)]
-		println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
-		#[cfg(not(test))]
+		//#[cfg(test)]
+		//println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
+		//#[cfg(not(test))]
 		$crate::logger::logger::ZephyrLogger::error(ScopedModule::instance(), core::format_args!($($arg)*));
 		panic!($($arg)*);
 	}};
@@ -127,9 +127,9 @@ macro_rules! critical {
 #[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {{
-		#[cfg(test)]
-		println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
-		#[cfg(not(test))]
+		//#[cfg(test)]
+		//println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
+		//#[cfg(not(test))]
 		$crate::logger::logger::ZephyrLogger::error(ScopedModule::instance(), core::format_args!($($arg)*));
     }}
 }
@@ -137,9 +137,9 @@ macro_rules! error {
 #[macro_export]
 macro_rules! warn {
     ($($arg:tt)*) => {{
-		#[cfg(test)]
-		println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
-		#[cfg(not(test))]
+		//#[cfg(test)]
+		//println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
+		//#[cfg(not(test))]
 		$crate::logger::logger::ZephyrLogger::warn(ScopedModule::instance(), core::format_args!($($arg)*));
     }}
 }
@@ -159,9 +159,9 @@ macro_rules! info {
 macro_rules! debug {
     ($($arg:tt)*) => {{
 
-            #[cfg(test)]
-            println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
-            #[cfg(not(test))]
+            //#[cfg(test)]
+            //println!("{}: {}", ScopedModule::module_name(), core::format_args!($($arg)*));
+            //#[cfg(not(test))]
             $crate::logger::logger::ZephyrLogger::debug(ScopedModule::instance(), core::format_args!($($arg)*));
 
     }}

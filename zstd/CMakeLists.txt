@@ -6,6 +6,7 @@ zephyr_include_directories(include)
 zephyr_library_sources(
 	src/utils.c
 	src/sync/mutex.c
+	src/sync/spsc/msgq.c
 	src/thread/thread.c
 	src/logger/logger.c
 	zephyr/src/time.c
