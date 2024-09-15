@@ -1,18 +1,19 @@
 #![no_std]
 use alloc::sync::Arc;
-use zstd::info;
+use zstd::{error, info};
 use zstd::sync::mutex::Mutex;
 use zstd::module;
 
 extern crate alloc;
 
 
-module!(app, TerminalColor::DarkGreen);
+module!(rust, TerminalColor::DarkGreen);
 
 #[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
+fn panic(info: &core::panic::PanicInfo) -> ! {
     loop {
-        // TODO: Add panic handler
+        error!("Panic: {:#?}", info);
+        loop {}
     }
 }
 
@@ -58,5 +59,6 @@ pub extern "C" fn rust_test(a: i32, b: i32) -> i32 {
 
     info!("Mutex value: {}",  *mutex.lock());
 
+    panic!("we are having a panic!");
     x + y
 }
