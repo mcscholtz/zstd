@@ -6,3 +6,4 @@ modules
 bootloader
 tools
 /zephyr
+**/target

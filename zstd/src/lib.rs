@@ -11,6 +11,8 @@ static mut ALLOCATOR: zephyr::alloc::KernelAllocator = zephyr::alloc::KernelAllo
 pub mod sync;
 pub mod thread;
 pub mod logger;
+pub mod net;
+pub mod fd;
 
 pub use logger::logger::{
     Level,

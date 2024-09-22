@@ -1,5 +1,8 @@
 #![no_std]
+use core::time::Duration;
+
 use alloc::sync::Arc;
+use zstd::net::sock::TcpListener;
 use zstd::sync::Channel;
 use zstd::{error, info};
 use zstd::sync::mutex::Mutex;
@@ -17,7 +20,6 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
         zstd::thread::sleep(core::time::Duration::from_secs(10));
     }
 }
-
 
 #[no_mangle]
 pub extern "C" fn rust_test(a: i32, b: i32) -> i32 {
@@ -76,6 +78,22 @@ pub extern "C" fn rust_test(a: i32, b: i32) -> i32 {
 
     info!("Mutex value: {}",  *mutex.lock());
 
-    //panic!("we are having a panic!");
+    // addr
+    let listener = TcpListener::bind("127.0.0.1:4011").unwrap();
+
+    match listener.accept() {
+        Err(e) => error!("err: {:#?}", e),
+        Ok(stream) => {
+            info!("Made a connection!!!");
+            let msg = "hello...";
+            match stream.send(msg.as_bytes()) {
+                Err(e) => error!("Failed to send.... {:#?}", e),
+                Ok(count) => info!("Sent {} bytes", count)
+            }
+        }
+    }
+
+    zstd::thread::sleep(Duration::from_millis(1000));
+
     x + y
 }

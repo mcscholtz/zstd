@@ -8,6 +8,7 @@ zephyr_library_sources(
 	src/sync/mutex.c
 	src/sync/spsc/msgq.c
 	src/thread/thread.c
+	src/net/sock.c
 	src/logger/logger.c
 	zephyr/src/time.c
 )
